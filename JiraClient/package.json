@@ -1,0 +1,15 @@
+{
+  "name": "jira-client",
+  "version": "1.0.0",
+  "description": "jira trainee client side",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Andrii Havryliuk",
+  "license": "ISC",
+  "dependencies": {
+    "bootstrap": "^4.0.0-alpha.6",
+    "jquery": "^3.3.1"
+  }
+}
