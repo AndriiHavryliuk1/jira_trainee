@@ -1,6 +1,6 @@
 'use strict';
 
-const Task = require('../models/task');
+const Task = require('../../models/task');
 const mongoose = require('mongoose');
 
 exports.get_all_tasks = (req, res, next) => {

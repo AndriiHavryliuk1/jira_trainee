@@ -2,7 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const router = express.Router();
 const Task = require('../models/task');
-const TasksController = require('../controllers/tasksController');
+const TasksController = require('../controllers/tasks/tasksController');
 
 // GET tasks get all tasks
 router.get('/', TasksController.get_all_tasks);
