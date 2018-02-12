@@ -7,73 +7,41 @@ const mongoose = require('mongoose');
 
 exports.get_all_tasks = (req, res, next) => {
     var allTasksTree = [];
-    buildTreeWithPromisesUpToDown().then(result => { res.status(200).json(result); })
-
-
-    async function buildTreeWithPromisesDownToUp(allTasks) {
-        allTasks.forEach(async task => {
-            if (task.parent_id) {
-                task = await getTreeWithPromises(task, allTasks);
-            }
-            allTasksTree.push(task);
-            return task;
-        });
-
-        async function getTreeWithPromises(currentTask, allTasks) {
-            let parentTask = await allTasks.find(x => x._id.toString() === currentTask.parent_id.toString());
-            parentTask.childrens = parentTask.childrens || [];
-            parentTask.childrens.push(currentTask);
-
-            if (parentTask.parent_id) {
-                parentTask = getTreeWithoutPromises(parentTask, allTasks);
-            }
-
-            return parentTask;
-        }
-    }
-
-    async function buildTreeWithPromisesUpToDown() {
-        let roots = await Task.find().where({ 'parent_id': null }).exec();
-        for (let i = 0; i < roots.length; i++) {
-            roots[i]._doc.childrens = [];
-            roots[i]._doc.childrens = await getTreeWithPromises(roots[i]);
-        }
-
-        async function getTreeWithPromises(parent) {
-            let childrens = await Task.find().where({ 'parent_id': parent._id }).exec();
-            parent._doc.childrens = childrens;
-            for (let i = 0; i < parent._doc.childrens.length; i++) {
-                parent._doc.childrens[i].childrens = [];
-                parent._doc.childrens[i].childrens = await getTreeWithPromises(parent._doc.childrens[i]);
-            }
-
-            return childrens;
-        }
-        return roots;
-    }
-
-
-    function buildTreeWithoutPromises(allTasks) {
-        allTasks.forEach(task => {
-            if (task.parent_id) {
-                task = getTreeWithoutPromises(task, allTasks);
-            }
-            allTasksTree.push(task);
-        });
-
-        function getTreeWithoutPromises(currentTask, allTasks) {
-            let parentTask = allTasks.find(x => x._id.toString() === currentTask.parent_id.toString());
-            parentTask.childrens = parentTask.childrens || [];
-            parentTask.childrens.push(currentTask);
-
-            if (parentTask.parent_id) {
-                parentTask = getTreeWithoutPromises(parentTask, allTasks);
-            }
-
-            return parentTask;
-        }
-    }
+    buildTreeWithPromisesUpToDown(req.query.getTree === "true").then(result => { res.status(200).json(result); })
 };
+
+
+exports.get_all_tasks_tree = (req, res, next) => {
+    buildTreeWithPromisesUpToDown().then(result => { res.status(200).json(result); })
+};
+
+async function buildTreeWithPromisesUpToDown(treeOnly) {
+    let roots = null;
+    if (!treeOnly) {
+        roots = await Task.find().select('_id task_id name description parent_id user_id column_id status').exec();
+    } else {
+        roots = await Task.find().select('_id task_id name description parent_id user_id column_id status')
+        .where({ 'parent_id': null }).exec();
+    }
+    for (let i = 0; i < roots.length; i++) {
+        roots[i]._doc.childrens = [];
+        roots[i]._doc.childrens = await getTreeWithPromises(roots[i]);
+    }
+
+    async function getTreeWithPromises(parent) {
+        let childrens = await Task.find().select('_id task_id name description parent_id user_id column_id status')
+            .where({ 'parent_id': parent._id }).exec();
+        parent._doc.childrens = childrens;
+        for (let i = 0; i < parent._doc.childrens.length; i++) {
+            parent._doc.childrens[i].childrens = [];
+            parent._doc.childrens[i].childrens = await getTreeWithPromises(parent._doc.childrens[i]);
+        }
+
+        return childrens;
+    }
+    return roots;
+}
+
 
 
 exports.get_task_by_id = (req, res, next) => {
@@ -171,12 +139,12 @@ exports.update_task = async (req, res, next) => {
             var taskStateMachine = new TaskStateMachine(currentTask.status);
             taskStateMachine.setNewState(propertiesForUpdate.status);
             propertiesForUpdate.status = taskStateMachine.state;
-            var columnForStatus = await BoardColumn.find().where({persistentName: taskStateMachine.state}).exec();
+            var columnForStatus = await BoardColumn.find().where({ persistentName: taskStateMachine.state }).exec();
             propertiesForUpdate.column_id = columnForStatus[0].id;
         }
 
         var result = await Task.update({ _id: id }, { $set: propertiesForUpdate }).exec();
-        res.status(200).json({updatedProperties: propertiesForUpdate});
+        res.status(200).json({ updatedProperties: propertiesForUpdate });
     } catch (error) {
         next(error);
     }

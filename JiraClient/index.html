@@ -8,6 +8,9 @@
     <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.min.css">
 
     <script src="node_modules/jquery/dist/jquery.min.js"></script>
+    <script src="bower_components/knockout/dist/knockout.js"></script>
+
+
 
     <title>Jira</title>
 </head>
@@ -29,7 +32,7 @@
                 <a class="nav-link" href="#">Link</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link disabled" href="#">Disabled</a>
+                <a class="nav-link disabled" href="#" ></a>
             </li>
         </ul>
         <form class="form-inline my-2 my-lg-0">
@@ -38,5 +41,16 @@
         </form>
     </div>
 </nav>
+
+
+<div data-bind="treeView:{title:'Some Title',selected:selectedNodes, data:data}">
+</div>
+<h4>Selected Nodes</h4>
+<ul data-bind="foreach: selectedNodes">
+    <li data-bind="text: $data"></li>
+</ul>
+<script src="js/constants.js"></script>
+<script src="js/services/taskService.js"></script>
+<script src="js/homeViewModel.js"></script>
 </body>
 </html>
