@@ -3,11 +3,7 @@ const StateMachine = require('javascript-state-machine');
 
 class TaskStateMachine {
     constructor(currentState) {
-        this.taskStateMachine = null;
-        this.currentState = currentState
-    }
-
-    init() {
+        this.currentState = currentState || "To_Do";
         this.taskStateMachine = new StateMachine({
             init: this.currentState,
             transitions: [
@@ -31,6 +27,41 @@ class TaskStateMachine {
                 onReject: function () { console.log('I reject') }
             }
         });
-        this.taskStateMachine.init();
+    }
+
+    get stateMachine() {
+        return this.taskStateMachine;
+    }
+
+    get state() {
+        return this.taskStateMachine.state;
+    }
+
+    setNewState(newTransactionName) {
+        switch (newTransactionName) {
+            case 'startDoing':
+                this.taskStateMachine.startDoing();
+                break;
+            case 'toClarification':
+                this.taskStateMachine.toClarification();
+                break;
+            case 'toForReview':
+                this.taskStateMachine.toForReview();
+                break;
+            case 'toInReview':
+                this.taskStateMachine.toInReview();
+                break;
+            case 'toDone':
+                this.taskStateMachine.toDone();
+                break;
+            case 'reject':
+                this.taskStateMachine.reject();
+                break;
+            default:
+                this.taskStateMachine.reject();
+
+        }
     }
 }
+
+module.exports = TaskStateMachine;

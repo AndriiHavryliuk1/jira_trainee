@@ -1,6 +1,8 @@
 'use strict';
 
 const Task = require('../../models/task');
+const BoardColumn = require('../../models/boardColumn');
+const TaskStateMachine = require('./taskStateMachine');
 const mongoose = require('mongoose');
 
 exports.get_all_tasks = (req, res, next) => {
@@ -156,19 +158,28 @@ exports.create_task = (req, res, next) => {
     }
 };
 
-exports.update_task = (req, res, next) => {
-    const id = req.params.taskId;
-    const propertiesForUpdate = {};
-    for (const prop in req.body) {
-        propertiesForUpdate[prop] = req.body[prop];
+exports.update_task = async (req, res, next) => {
+    try {
+        const id = req.params.taskId;
+        const propertiesForUpdate = {};
+        for (const prop in req.body) {
+            propertiesForUpdate[prop] = req.body[prop];
+        }
+
+        if (propertiesForUpdate.status) {
+            var currentTask = await Task.findById(id);
+            var taskStateMachine = new TaskStateMachine(currentTask.status);
+            taskStateMachine.setNewState(propertiesForUpdate.status);
+            propertiesForUpdate.status = taskStateMachine.state;
+            var columnForStatus = await BoardColumn.find().where({persistentName: taskStateMachine.state}).exec();
+            propertiesForUpdate.column_id = columnForStatus[0].id;
+        }
+
+        var result = await Task.update({ _id: id }, { $set: propertiesForUpdate }).exec();
+        res.status(200).json({updatedProperties: propertiesForUpdate});
+    } catch (error) {
+        next(error);
     }
-    Task.update({ _id: id }, { $set: propertiesForUpdate }).exec()
-        .then(result => {
-            res.status(200).json(result)
-        })
-        .catch(error => res.status(500).json({
-            error: error
-        }));
 };
 
 exports.delete_task = async (req, res, next) => {
