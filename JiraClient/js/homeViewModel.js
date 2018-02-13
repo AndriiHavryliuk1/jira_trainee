@@ -1,8 +1,3 @@
-const homeViewModel = {
-    url: ko.observable("index.html"),
-    message: ko.observable("hjgkjhkl вную страницу")
-};
-
 let taskService = new TaskService();
 
 // ko.applyBindings(homeViewModel);
@@ -35,14 +30,11 @@ ko.bindingHandlers.treeView = {
         //set default data values
         options.label = 'name';
         options.childNode = 'childrens';
-        options.title = "To Do";
         options.id = "_id";
         options.onClickTaskFn = function(data) {
-            viewModel.showSelectedNode(true);
             viewModel.selectedNode(data);
+            viewModel.showSelectedNode(true);
         };
-
-
 
         //create the tree
         ko.bindingHandlers.treeView.createNodes(element, options);
@@ -58,11 +50,19 @@ ko.bindingHandlers.treeView = {
 
 };
 
+ko.bindingHandlers.htmlUrl = {
+    init: function (element, valueAccessor, allBindings, viewModel, bindingContext) {
+        let value = ko.unwrap(valueAccessor());
+        markupLoader.loadMarkup(element, value, bindingContext);
+        return { controlsDescendantBindings: true };
+    }
+};
+
 function ViewModelBoard() {
     let that = this;
     this.data = ko.observableArray([]);
     this.showSelectedNode = ko.observable(false);
-    this.selectedNode = ko.observable(null);
+    this.selectedNode = ko.observable({});
     this.data = ko.observableArray([]);
     taskService.getAllTasks().then((response) => {
         that.data(response);

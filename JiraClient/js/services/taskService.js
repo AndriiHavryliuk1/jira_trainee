@@ -18,3 +18,19 @@ TaskService.prototype.getAllTasks = function() {
         console.log(error);
     })
 };
+
+TaskService.prototype.updateTask = function(value) {
+    return $.put(Constants.SERVER_URL + "tasks", value, function(response) {
+        return response.promise;
+    }).fail(function(error) {
+        console.log(error);
+    })
+};
+
+TaskService.prototype.createTask = function(value) {
+    return $.post(Constants.SERVER_URL + "tasks", value, function(response) {
+        return response.promise;
+    }).fail(function(error) {
+        console.log(error);
+    })
+};

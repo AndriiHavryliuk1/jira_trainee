@@ -46,53 +46,13 @@
 <div class="column-tree-view treeview" data-bind="treeView:{title:'To Do', data:data}">
 </div>
 
-<h4>Selected Node:</h4>
 <div data-bind="if: showSelectedNode">
-    <div class="row">
-        <div class="col">
-            Name:
-        </div>
-        <div class="col"> <span data-bind="text: selectedNode.name"></span></div>
-    </div>
-    <div class="row">
-        <div class="col">
-            Description:
-        </div>
-        <div class="col" data-bind="text: selectedNode.description">
-        </div>
-    </div>
-    <div class="row">
-        <div class="col">
-            Status:
-        </div>
-        <div class="col" data-bind="text: selectedNode.status">
-        </div>
-    </div>
-    <div class="row">
-        <div class="col">
-            User ID:
-        </div>
-        <div class="col" data-bind="text: selectedNode.user_id">
-        </div>
-    </div>
-    <div class="row">
-        <div class="col">
-            Column ID:
-        </div>
-        <div class="col" data-bind="text: selectedNode.column_id">
-        </div>
-    </div>
-    <div class="row">
-        <div class="col">
-            Parent ID:
-        </div>
-        <div class="col" data-bind="text: selectedNode.parent_id">
-        </div>
-    </div>
+    <div data-bind="htmlUrl: 'js/board/taskDetail-template.html'"></div>
 </div>
 
 <script src="js/constants.js"></script>
 <script src="js/services/taskService.js"></script>
+<script src="js/utils/markupLoader.js"></script>
 <script src="js/homeViewModel.js"></script>
 </body>
 </html>

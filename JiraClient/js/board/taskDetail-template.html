@@ -1,0 +1,44 @@
+<h4>Selected Node:</h4>
+<div data-bind="with: selectedNode">
+    <div class="row">
+        <div class="col">
+            Name:
+        </div>
+        <div class="col"><span data-bind="text: name"></span></div>
+    </div>
+    <div class="row">
+        <div class="col">
+            Description:
+        </div>
+        <div class="col" data-bind="text: description">
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            Status:
+        </div>
+        <div class="col" data-bind="text: status">
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            User ID:
+        </div>
+        <div class="col" data-bind="text: user_id ? user_id : 'null'">
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            Column ID:
+        </div>
+        <div class="col" data-bind="text: column_id">
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            Parent ID:
+        </div>
+        <div class="col" data-bind="text: parent_id ? parent_id : 'root'">
+        </div>
+    </div>
+</div>
