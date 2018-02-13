@@ -1,0 +1,18 @@
+.column-header {
+    display: block;
+    max-width: 400px;
+}
+
+.column-tree-view {
+    display: table;
+}
+
+.column-tree-view ul {
+    list-style-type: none;
+}
+
+.tree-view-task {
+    border: 1px solid;
+    border-radius: 8px;
+    margin: 5px;
+}
