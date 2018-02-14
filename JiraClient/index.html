@@ -32,11 +32,13 @@
                 <a class="nav-link" href="#">Link</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link disabled" href="#"></a>
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-bind="click: openCreateModel" data-target="#myModal">
+                    Launch demo modal
+                </button>
             </li>
         </ul>
         <form class="form-inline my-2 my-lg-0">
-            <input class="form-control mr-sm-2" type="text" placeholder="Search">
+            <input class="form-control mr-sm-2" type="text" placeholder="Search" data-bind="value: searchTickets, valueUpdate: 'input'" >
             <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
         </form>
     </div>
@@ -50,8 +52,13 @@
     <div data-bind="htmlUrl: 'js/board/taskDetail-template.html'"></div>
 </div>
 
+<div data-bind="htmlUrl: 'js/board/createTask-tamplate.html'"></div>
+
+
+
 <script src="js/constants.js"></script>
 <script src="js/services/taskService.js"></script>
+<script src="js/services/userService.js"></script>
 <script src="js/utils/markupLoader.js"></script>
 <script src="js/homeViewModel.js"></script>
 </body>

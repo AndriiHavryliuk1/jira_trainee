@@ -16,3 +16,11 @@
     border-radius: 8px;
     margin: 5px;
 }
+
+.tree-view-task:hover {
+    cursor: pointer;
+}
+
+.tree-view-task-selected {
+    background-color: lightsteelblue;
+}

@@ -1,0 +1,83 @@
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid" data-bind="with: newTask">
+                    <div class="row">
+                        <div class="col-md-2">
+                            Name:
+                        </div>
+                        <div class="col"><input data-bind="value: name"/></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-2">
+                            Description:
+                        </div>
+                        <div class="col">
+                            <textarea data-bind="value: description"></textarea>
+                        </div>
+                    </div>
+                    <div class="row" data-bind="if: $root.availableStatuses">
+                        <div class="col-md-2">
+                            Status:
+                        </div>
+                        <div class="col">
+                            <select data-bind="options: $root.availableStatuses,
+                       value: status,
+                       optionsCaption: 'Choose...'"></select>
+                        </div>
+                    </div>
+                    <div class="row" data-bind="if: !!$root.availableUsers">
+                        <div class="col-md-2">
+                            User ID:
+                        </div>
+                        <div class="col">
+                            <select data-bind="options: $root.availableUsers,
+                       optionsValue: '_id'
+                       optionsText: 'firstName'
+                       value: user_id,
+                       optionsCaption: 'Choose...'"></select>
+                        </div>
+                    </div>
+                    <div class="row" data-bind="if: $root.availableColumns">
+                        <div class="col-md-2">
+                            Column ID:
+                        </div>
+                        <div class="col">
+                            <select data-bind="options: $root.availableColumns,
+                       optionsValue: '_id'
+                       optionsText: 'firstName'
+                       value: user_id,
+                       optionsCaption: 'Choose...'"></select>
+                        </div>
+                    </div>
+                    <div class="row" data-bind="if: $root.availableParents">
+                        <div class="col-md-2">
+                            Parent ID:
+                        </div>
+                        <div class="col">
+                            <select data-bind="options: $root.availableParents,
+                       optionsValue: 'id'
+                       optionsText: 'name'
+                       value: parent_id,
+                       optionsCaption: 'Choose...'"></select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
