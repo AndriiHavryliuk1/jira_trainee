@@ -9,71 +9,74 @@
             </div>
             <div class="modal-body">
                 <div class="container-fluid" data-bind="with: newTask">
-                    <div class="row">
-                        <div class="col-md-2">
-                            Name:
+                    <form>
+                        <div class="form-group form-horizontal">
+                            <label class="col-sm-3 control-label">Name:</label>
+                            <div class="col-sm-9">
+                                <input type="text" name="name" placeholder="Name" data-bind="value: name, valueUpdate: 'keyup'"
+                                       class="form-control" required maxlength="30">
+                            </div>
                         </div>
-                        <div class="col"><input data-bind="value: name"/></div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-2">
-                            Description:
+                        <div class="form-group form-horizontal">
+                            <label class="col-sm-3 control-label">Description:</label>
+                            <div class="col-sm-9">
+                                <textarea type="text" name="description" placeholder="Description"
+                                          data-bind="value: description" class="form-control"></textarea>
+                            </div>
                         </div>
-                        <div class="col">
-                            <textarea data-bind="value: description"></textarea>
+
+                        <div class="row" data-bind="if: $root.availableStatuses">
+                            <div class="col-md-2">
+                                Status:
+                            </div>
+                            <div class="col">
+                                <select data-bind="options: $root.availableStatuses,
+                                                    value: status,
+                                                    optionsCaption: 'Choose...'"></select>
+                            </div>
                         </div>
-                    </div>
-                    <div class="row" data-bind="if: $root.availableStatuses">
-                        <div class="col-md-2">
-                            Status:
-                        </div>
-                        <div class="col">
-                            <select data-bind="options: $root.availableStatuses,
-                       value: status,
-                       optionsCaption: 'Choose...'"></select>
-                        </div>
-                    </div>
-                    <div class="row" data-bind="if: !!$root.availableUsers">
-                        <div class="col-md-2">
-                            User ID:
-                        </div>
-                        <div class="col">
-                            <select data-bind="options: $root.availableUsers,
+                        <div class="row" data-bind="if: !!$root.availableUsers">
+                            <div class="col-md-2">
+                                User ID:
+                            </div>
+                            <div class="col">
+                                <select data-bind="options: $root.availableUsers,
                        optionsValue: '_id'
                        optionsText: 'firstName'
                        value: user_id,
                        optionsCaption: 'Choose...'"></select>
+                            </div>
                         </div>
-                    </div>
-                    <div class="row" data-bind="if: $root.availableColumns">
-                        <div class="col-md-2">
-                            Column ID:
-                        </div>
-                        <div class="col">
-                            <select data-bind="options: $root.availableColumns,
+                        <div class="row" data-bind="if: $root.availableColumns">
+                            <div class="col-md-2">
+                                Column ID:
+                            </div>
+                            <div class="col">
+                                <select data-bind="options: $root.availableColumns,
                        optionsValue: '_id'
                        optionsText: 'firstName'
                        value: user_id,
                        optionsCaption: 'Choose...'"></select>
+                            </div>
                         </div>
-                    </div>
-                    <div class="row" data-bind="if: $root.availableParents">
-                        <div class="col-md-2">
-                            Parent ID:
-                        </div>
-                        <div class="col">
-                            <select data-bind="options: $root.availableParents,
+                        <div class="row" data-bind="if: $root.availableParents">
+                            <div class="col-md-2">
+                                Parent ID:
+                            </div>
+                            <div class="col">
+                                <select data-bind="options: $root.availableParents,
                        optionsValue: 'id'
                        optionsText: 'name'
                        value: parent_id,
                        optionsCaption: 'Choose...'"></select>
+                            </div>
                         </div>
-                    </div>
+                    </form>
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" data-bind="click: createNewTask">Create ticket</button>
             </div>
         </div>
     </div>

@@ -32,8 +32,8 @@
                 <a class="nav-link" href="#">Link</a>
             </li>
             <li class="nav-item">
-                <button type="button" class="btn btn-primary" data-toggle="modal" data-bind="click: openCreateModel" data-target="#myModal">
-                    Launch demo modal
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#myModal">
+                    Create
                 </button>
             </li>
         </ul>
@@ -44,10 +44,11 @@
     </div>
 </nav>
 
-
-<div class="column-tree-view treeview" data-bind="treeView:{title:'To Do', data:data}">
+<div class="container-fluid">
+    <div class="col-sm-4">
+<div class="column-tree-view treeview" data-bind="treeView:{title:'To Do', data:data}"></div>
+    </div>
 </div>
-
 <div data-bind="if: showSelectedNode">
     <div data-bind="htmlUrl: 'js/board/taskDetail-template.html'"></div>
 </div>
@@ -56,10 +57,19 @@
 
 
 
+
+
+
+
+<script src="node_modules/tether/dist/js/tether.min.js"></script>
+<script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+
+
 <script src="js/constants.js"></script>
 <script src="js/services/taskService.js"></script>
 <script src="js/services/userService.js"></script>
 <script src="js/utils/markupLoader.js"></script>
 <script src="js/homeViewModel.js"></script>
+
 </body>
 </html>

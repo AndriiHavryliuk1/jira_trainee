@@ -72,13 +72,13 @@ ko.bindingHandlers.htmlUrl = {
 function ViewModelBoard() {
     let that = this;
     this.data = ko.observableArray([]);
-    this.newTask = ko.observable({
-        name: "",
-        description: "",
-        status: "",
-        user_id: null,
-        parent_id: null,
-    });
+    this.newTask = {
+        name: ko.observable(""),
+        description: ko.observable(""),
+        status: ko.observable(""),
+        user_id: ko.observable(null),
+        parent_id: ko.observable(null),
+    };
 
     this.showSelectedNode = ko.observable(false);
     this.selectedNode = ko.observable({});
@@ -94,11 +94,13 @@ function ViewModelBoard() {
         that.availableUsers = res;
     });
 
+    this.createNewTask = function() {
+        console.log(that.newTask.name());
+    };
 
-    this.openCreateModel = function() {
-        var l = $("myModal");
-        l.model('show');
-    }
+    this.newTask.name.subscribe(function(newValue) {
+        console.log(newValue);
+    })
 
 }
 let viewModelBoard = new ViewModelBoard();

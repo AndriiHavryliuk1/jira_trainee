@@ -1,11 +1,4 @@
-.column-header {
-    display: block;
-    max-width: 400px;
-}
 
-.column-tree-view {
-    display: table;
-}
 
 .column-tree-view ul {
     list-style-type: none;
@@ -23,4 +16,12 @@
 
 .tree-view-task-selected {
     background-color: lightsteelblue;
+}
+
+.form-horizontal {
+    display: flex;
+}
+
+.ko-treeview-list {
+    padding-left: 10px;
 }
