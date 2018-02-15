@@ -107,10 +107,10 @@ exports.create_task = (req, res, next) => {
             task_id: ++maxId || 1,
             name: req.body.name,
             description: req.body.description,
-            parent_id: req.body.parent_id,
+            parent_id: req.body.parent_id ? req.body.parent_id : null,
             children_ids: req.body.children_ids,
-            user_id: req.body.user_id,
-            column_id: req.body.column_id,
+            user_id: req.body.user_id ? req.body.user_id : null,
+            column_id: req.body.column_id ? req.body.column_id : null,
             status: req.body.status,
             type: req.body.type
         })

@@ -55,13 +55,7 @@ function ViewModelMain() {
 
 
     this.createNewTask = function () {
-        taskService.createTask(JSON.stringify({name: this.newTask.name(),
-            description: this.newTask.description(),
-            status: this.newTask.status(),
-            user_id: this.newTask.user_id(),
-            parent_id: this.newTask.parent_id(),
-            column_id: this.newTask.column_id(),
-            type: this.newTask.type()})).then(() => console.log("success"), () => console.log("error"))
+        taskService.createTask(ko.toJS(this.newTask)).then(() => console.log("success"), () => console.log("error"))
         $('#myModal').modal('hide');
         that.newTask = {
             name: ko.observable(""),
