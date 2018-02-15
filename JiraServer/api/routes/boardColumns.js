@@ -5,7 +5,7 @@ const BoardColumn = require('../models/boardColumn');
 
 // GET get all boardColumns
 router.get('/', (req, res, next) => {
-    BoardColumn.find().exec()
+    BoardColumn.find().select('_id name persistentName').exec()
         .then(result => {
             res.status(200).json(result);
         })

@@ -14,7 +14,7 @@
 
     <title>Jira</title>
 </head>
-<body>
+<body id="main-vm">
 
 
 <nav class="navbar navbar-toggleable-md navbar-light bg-faded">
@@ -38,7 +38,8 @@
             </li>
         </ul>
         <form class="form-inline my-2 my-lg-0">
-            <input class="form-control mr-sm-2" type="text" placeholder="Search" data-bind="value: searchTickets, valueUpdate: 'input'" >
+            <input class="form-control mr-sm-2" type="text" placeholder="Search"
+                   data-bind="value: searchTickets, valueUpdate: 'input'">
             <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
         </form>
     </div>
@@ -46,30 +47,28 @@
 
 <div class="container-fluid">
     <div class="col-sm-4">
-<div class="column-tree-view treeview" data-bind="treeView:{title:'To Do', data:data}"></div>
+        <div class="column-tree-view treeview" data-bind="treeView:{title:'To Do', data:data}"></div>
     </div>
 </div>
 <div data-bind="if: showSelectedNode">
     <div data-bind="htmlUrl: 'js/board/taskDetail-template.html'"></div>
 </div>
 
-<div data-bind="htmlUrl: 'js/board/createTask-tamplate.html'"></div>
 
-
-
-
-
+<div data-bind="htmlUrl: 'js/board/createTask-tamplate.html'" id="create-task-vm"></div>
 
 
 <script src="node_modules/tether/dist/js/tether.min.js"></script>
 <script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
 
-
 <script src="js/constants.js"></script>
 <script src="js/services/taskService.js"></script>
 <script src="js/services/userService.js"></script>
+<script src="js/services/boardColumnsService.js"></script>
 <script src="js/utils/markupLoader.js"></script>
+<script src="js/board/buildTreeView.js"></script>
 <script src="js/homeViewModel.js"></script>
+<script src="js/board/createTaskViewModel.js"></script>
 
 </body>
 </html>

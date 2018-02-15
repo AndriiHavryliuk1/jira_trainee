@@ -9,7 +9,8 @@ const taskSchema = mongoose.Schema({
     children_ids: { type:Array, default: [] },
     user_id: mongoose.Schema.Types.ObjectId,
     column_id: mongoose.Schema.Types.ObjectId,
-    status: String
+    status: String,
+    type: String
 });
 
 module.exports = mongoose.model('Task', taskSchema);

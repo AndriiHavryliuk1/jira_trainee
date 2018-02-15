@@ -6,22 +6,24 @@ const TaskStateMachine = require('./taskStateMachine');
 const mongoose = require('mongoose');
 
 exports.get_all_tasks = (req, res, next) => {
-    var allTasksTree = [];
-    buildTreeWithPromisesUpToDown(req.query.getTree === "true").then(result => { res.status(200).json(result); })
+    Task.find().select('_id task_id name description parent_id user_id column_id status type').exec().then(result => { res.status(200).json(result); }, error => { next(error); });
 };
 
+exports.get_all_tasks_with_childs = (req, res, next) => {
+    buildTreeWithPromisesUpToDown(false).then(result => { res.status(200).json(result); })
+};
 
 exports.get_all_tasks_tree = (req, res, next) => {
-    buildTreeWithPromisesUpToDown().then(result => { res.status(200).json(result); })
+    buildTreeWithPromisesUpToDown(true).then(result => { res.status(200).json(result); })
 };
 
 async function buildTreeWithPromisesUpToDown(treeOnly) {
     let roots = null;
     if (!treeOnly) {
-        roots = await Task.find().select('_id task_id name description parent_id user_id column_id status').exec();
+        roots = await Task.find().select('_id task_id name description parent_id user_id column_id status type').exec();
     } else {
-        roots = await Task.find().select('_id task_id name description parent_id user_id column_id status')
-        .where({ 'parent_id': null }).exec();
+        roots = await Task.find().select('_id task_id name description parent_id user_id column_id status type')
+            .where({ 'parent_id': null }).exec();
     }
     for (let i = 0; i < roots.length; i++) {
         roots[i]._doc.childrens = [];
@@ -29,7 +31,7 @@ async function buildTreeWithPromisesUpToDown(treeOnly) {
     }
 
     async function getTreeWithPromises(parent) {
-        let childrens = await Task.find().select('_id task_id name description parent_id user_id column_id status')
+        let childrens = await Task.find().select('_id task_id name description parent_id user_id column_id status type')
             .where({ 'parent_id': parent._id }).exec();
         parent._doc.childrens = childrens;
         for (let i = 0; i < parent._doc.childrens.length; i++) {
@@ -90,8 +92,6 @@ exports.get_task_by_id = (req, res, next) => {
 };
 
 
-
-
 exports.create_task = (req, res, next) => {
     Task.find().exec().then(allTasks => {
         var maxId = allTasks.reduce((max, p) => p.task_id > max ? p.task_id : max, allTasks[0].task_id);
@@ -111,7 +111,8 @@ exports.create_task = (req, res, next) => {
             children_ids: req.body.children_ids,
             user_id: req.body.user_id,
             column_id: req.body.column_id,
-            status: req.body.status
+            status: req.body.status,
+            type: req.body.type
         })
 
         task.save().then(result => {
@@ -152,10 +153,16 @@ exports.update_task = async (req, res, next) => {
 
 exports.delete_task = async (req, res, next) => {
     const id = req.params.taskId;
-    let result = await Task.findById(id).exec();
-    await updateAllChildrens(result._id, result.parent_id, next)
-    const deleteResult = await Task.remove({ _id: id }).exec()
-    res.status(200).json(deleteResult)
+
+    if (req.query.deleteAllChilds === "true") {
+        deleteAllChildrens(id, next);
+    } else {
+        let result = await Task.findById(id).exec();
+        await updateAllChildrens(result._id, result.parent_id, next);
+    }
+
+    await Task.remove({ _id: id }).exec();
+    res.status(200).json({ id: id, massage: "Deleted success!" });
 
     async function updateAllChildrens(currentId, parentId, next) {
         return await Task.find().where()
@@ -163,5 +170,15 @@ exports.delete_task = async (req, res, next) => {
             .exec().catch(error => {
                 next(error)
             });
+    }
+
+    async function deleteAllChildrens(currentId, next) {
+        let childrens = await Task.find().where({ parent_id: currentId }).exec();
+        if (childrens.lenght) {
+            childrens.forEach(async child => {
+                await deleteAllChildrens(child._id, next);
+            });
+            await Task.remove({ _id: { $in: childrens.map(child => child._id) } }).exec().catch(error => next(error));
+        }
     }
 };

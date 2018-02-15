@@ -4,8 +4,12 @@ const router = express.Router();
 const Task = require('../models/task');
 const TasksController = require('../controllers/tasks/tasksController');
 
-// GET tasks get all tasks
+
+// GET tasks get all tasks 
 router.get('/', TasksController.get_all_tasks);
+
+// GET tasks get all tasks with childs
+router.get('/withChilds', TasksController.get_all_tasks_with_childs);
 
 // GET tasks get all tasks tree
 router.get('/tree', TasksController.get_all_tasks_tree);

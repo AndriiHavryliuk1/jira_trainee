@@ -3,7 +3,7 @@ function TaskService() {
     this.tasksTree = [];
 }
 
-TaskService.prototype.getAllTreeTasks = function() {
+TaskService.prototype.getAllTasks = function() {
     return $.get(Constants.SERVER_URL + "tasks", function(response) {
         return response.promise;
     }).fail(function(error) {
@@ -11,8 +11,8 @@ TaskService.prototype.getAllTreeTasks = function() {
     })
 };
 
-TaskService.prototype.getAllTasks = function() {
-    return $.get(Constants.SERVER_URL + "tasks?getTree=true", function(response) {
+TaskService.prototype.getAllTreeTasks = function() {
+    return $.get(Constants.SERVER_URL + "tasks/tree", function(response) {
         return response.promise;
     }).fail(function(error) {
         console.log(error);

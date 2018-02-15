@@ -13,7 +13,8 @@
                         <div class="form-group form-horizontal">
                             <label class="col-sm-3 control-label">Name:</label>
                             <div class="col-sm-9">
-                                <input type="text" name="name" placeholder="Name" data-bind="value: name, valueUpdate: 'keyup'"
+                                <input type="text" name="name" placeholder="Name"
+                                       data-bind="value: name, valueUpdate: 'keyup'"
                                        class="form-control" required maxlength="30">
                             </div>
                         </div>
@@ -35,42 +36,43 @@
                                                     optionsCaption: 'Choose...'"></select>
                             </div>
                         </div>
-                        <div class="row" data-bind="if: !!$root.availableUsers">
-                            <div class="col-md-2">
-                                User ID:
-                            </div>
-                            <div class="col">
-                                <select data-bind="options: $root.availableUsers,
-                       optionsValue: '_id'
-                       optionsText: 'firstName'
-                       value: user_id,
-                       optionsCaption: 'Choose...'"></select>
-                            </div>
+                        <div class="form-group form-horizontal" data-bind="if: $root.showAvailableUser">
+                            <label class="col-sm-3 control-label">
+                                User:
+                            </label>
+                            <select class="form-control col-sm-9" data-bind="options: $root.availableUsers,
+                                     optionsValue: '_id',
+                                     optionsText: 'firstName',
+                                     value: user_id,
+                                     optionsCaption: 'Choose...'"></select>
                         </div>
-                        <div class="row" data-bind="if: $root.availableColumns">
-                            <div class="col-md-2">
-                                Column ID:
-                            </div>
-                            <div class="col">
-                                <select data-bind="options: $root.availableColumns,
-                       optionsValue: '_id'
-                       optionsText: 'firstName'
-                       value: user_id,
-                       optionsCaption: 'Choose...'"></select>
-                            </div>
+
+                        <div class="form-group form-horizontal" data-bind="if: $root.showAvailableColumns">
+                            <label class="col-sm-3 control-label">
+                                Column:
+                            </label>
+                            <select class="form-control col-sm-9" data-bind="options: $root.availableColumns,
+                                   optionsValue: '_id',
+                                   optionsText: 'name',
+                                   value: column_id,
+                                   optionsCaption: 'Choose...'"></select>
+
                         </div>
-                        <div class="row" data-bind="if: $root.availableParents">
-                            <div class="col-md-2">
-                                Parent ID:
-                            </div>
-                            <div class="col">
-                                <select data-bind="options: $root.availableParents,
-                       optionsValue: 'id'
-                       optionsText: 'name'
-                       value: parent_id,
-                       optionsCaption: 'Choose...'"></select>
-                            </div>
+
+
+                        <div class="form-group form-horizontal" data-bind="if: $root.showAvailableParents">
+                            <label class="col-sm-3 control-label">
+                                Parent:
+                            </label>
+                            <select class="form-control col-sm-9" data-bind="options: $root.availableParents,
+                                   optionsValue: '_id',
+                                   optionsText: 'name',
+                                   value: parent_id,
+                                   optionsCaption: 'Choose...'"></select>
+
                         </div>
+
+
                     </form>
                 </div>
             </div>

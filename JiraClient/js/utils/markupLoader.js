@@ -12,3 +12,12 @@ markupLoader = {
         });
     }
 };
+
+
+ko.bindingHandlers.htmlUrl = {
+    init: function (element, valueAccessor, allBindings, viewModel, bindingContext) {
+        let value = ko.unwrap(valueAccessor());
+        markupLoader.loadMarkup(element, value, bindingContext);
+        return {controlsDescendantBindings: true};
+    }
+};
