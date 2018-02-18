@@ -13,29 +13,19 @@ function ViewModelMain() {
         console.log(error);
     });
 
-    taskService.getAllTasks().then((response) => {
-        that.availableParents = ko.observableArray(response);
-        that.showAvailableParents(true);
-    }, (error) => {
-        console.log(error);
-    });
-
-    taskService.getAllTreeTasks().then((response) => {
-        that.data(response);
-    }, (error) => {
-        console.log(error);
-    });
-
     userService.getAllUsers().then((res) => {
         that.availableUsers = ko.observableArray(res);
         that.showAvailableUser(true);
     });
+
+    this.initTasks();
 
 
     this.data = ko.observableArray([]);
     this.showSelectedNode = ko.observable(false);
     this.selectedNode = ko.observable({});
     this.data = ko.observableArray([]);
+    this.availableParents = ko.observableArray([]);
     this.searchTickets = ko.observable("");
     this.showAvailableUser = ko.observable(false);
     this.showAvailableParents = ko.observable(false);
@@ -55,7 +45,8 @@ function ViewModelMain() {
 
 
     this.createNewTask = function () {
-        taskService.createTask(ko.toJS(this.newTask)).then(() => console.log("success"), () => console.log("error"))
+        let that = this;
+        taskService.createTask(ko.toJS(this.newTask)).then(() => { that.initTasks(); }, () => console.log("error"));
         $('#myModal').modal('hide');
         that.newTask = {
             name: ko.observable(""),
@@ -69,4 +60,21 @@ function ViewModelMain() {
     };
 
 }
+
+ViewModelMain.prototype.initTasks = function () {
+    let that = this;
+    taskService.getAllTasks().then((response) => {
+        that.availableParents(response);
+        that.showAvailableParents(true);
+    }, (error) => {
+        console.log(error);
+    });
+
+    taskService.getAllTreeTasks().then((response) => {
+        that.data(response);
+    }, (error) => {
+        console.log(error);
+    });
+};
+
 ko.applyBindings(new ViewModelMain(), document.getElementById('main-vm'));
