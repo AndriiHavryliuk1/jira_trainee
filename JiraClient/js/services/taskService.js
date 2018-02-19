@@ -53,6 +53,18 @@ TaskService.prototype.createTask = function(value) {
     });
 };
 
+TaskService.prototype.deleteTask = function(id) {
+    return $.ajax({
+        url: Constants.SERVER_URL + "tasks/" + id,
+        type: 'DELETE',
+        success: function(response) {
+            this.getAllTreeTasks();
+            this.getAllTasks();
+            return response.promise;
+        }.bind(this)
+    });
+};
+
 TaskService.prototype.updateTaskTreeAfterCreate = function(createResult) {
     let that = this;
     if (!createResult.parent_id) {
@@ -60,7 +72,6 @@ TaskService.prototype.updateTaskTreeAfterCreate = function(createResult) {
     } else {
         updateTree(this.tasksTree);
     }
-
 
     function updateTree(children) {
         let parentIndex = children.findIndex(x => x._id === createResult.parent_id);

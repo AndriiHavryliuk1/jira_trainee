@@ -43,23 +43,23 @@ function ViewModelMain() {
         type: ko.observable(null)
     };
 
-
-    this.createNewTask = function () {
-        let that = this;
-        taskService.createTask(ko.toJS(this.newTask)).then(() => { that.initTasks(); }, () => console.log("error"));
-        $('#myModal').modal('hide');
-        that.newTask = {
-            name: ko.observable(""),
-            description: ko.observable(""),
-            status: ko.observable(""),
-            user_id: ko.observable(null),
-            parent_id: ko.observable(null),
-            column_id: ko.observable(null),
-            type: ko.observable(null)
-        };
-    };
-
 }
+
+ViewModelMain.prototype.createNewTask = function() {
+    let that = this;
+    taskService.createTask(ko.toJS(this.newTask)).then(() => { that.initTasks(); }, () => console.log("error"));
+    this.newTask = {
+        name: ko.observable(""),
+        description: ko.observable(""),
+        status: ko.observable(""),
+        user_id: ko.observable(null),
+        parent_id: ko.observable(null),
+        column_id: ko.observable(null),
+        type: ko.observable(null)
+    };
+    $('#myModal').modal('hide');
+};
+
 
 ViewModelMain.prototype.initTasks = function () {
     let that = this;
@@ -75,6 +75,11 @@ ViewModelMain.prototype.initTasks = function () {
     }, (error) => {
         console.log(error);
     });
+};
+
+ViewModelMain.prototype.deleteTask = function() {
+    const id = this.selectedNode()._id;
+    taskService.deleteTask(id);
 };
 
 ko.applyBindings(new ViewModelMain(), document.getElementById('main-vm'));
