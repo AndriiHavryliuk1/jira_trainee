@@ -3,8 +3,8 @@ function TaskService() {
     this.tasksTree = [];
 }
 
-TaskService.prototype.getAllTasks = function() {
-    if (this.tasks.length) {
+TaskService.prototype.getAllTasks = function(forceUpdate) {
+    if (this.tasks.length && !forceUpdate) {
         return Promise.resolve(this.tasks);
     }
     return $.get(Constants.SERVER_URL + "tasks", function(response) {
@@ -15,8 +15,8 @@ TaskService.prototype.getAllTasks = function() {
     })
 };
 
-TaskService.prototype.getAllTreeTasks = function() {
-    if (this.tasksTree.length) {
+TaskService.prototype.getAllTreeTasks = function(forceUpdate) {
+    if (this.tasksTree.length && !forceUpdate) {
         return Promise.resolve(this.tasksTree);
     }
     return $.get(Constants.SERVER_URL + "tasks/tree", function(response) {
@@ -58,8 +58,6 @@ TaskService.prototype.deleteTask = function(id) {
         url: Constants.SERVER_URL + "tasks/" + id,
         type: 'DELETE',
         success: function(response) {
-            this.getAllTreeTasks();
-            this.getAllTasks();
             return response.promise;
         }.bind(this)
     });
@@ -80,6 +78,34 @@ TaskService.prototype.updateTaskTreeAfterCreate = function(createResult) {
             children[parentIndex].childrens.push(createResult);
         } else {
             children.forEach(child => {
+                if (child.childrens && child.childrens.length) {
+                    updateTree(child.childrens) ;
+                }
+            });
+        }
+    }
+};
+
+TaskService.prototype.updateTaskTreeAfterDelete = function(deletedId, deleteChields) {
+    let that = this;
+    updateTree(this.tasksTree);
+
+
+    function updateTree(tasksTree) {
+        let taskIndex = tasksTree.findIndex(x => x._id === deletedId);
+        if (taskIndex !== -1) {
+            if (deleteChields) {
+                tasksTree.splice(taskIndex, 1);
+            } else {
+                let parentId = tasksTree[taskIndex].parent_id;
+                tasksTree.childrens.forEach(child => {
+                    if (child.childrens && child.childrens.length) {
+                        updateTree(child.childrens) ;
+                    }
+                });
+            }
+        } else {
+            tasksTree.forEach(child => {
                 if (child.childrens && child.childrens.length) {
                     updateTree(child.childrens) ;
                 }

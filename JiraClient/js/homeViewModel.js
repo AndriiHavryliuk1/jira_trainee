@@ -47,39 +47,35 @@ function ViewModelMain() {
 
 ViewModelMain.prototype.createNewTask = function() {
     let that = this;
-    taskService.createTask(ko.toJS(this.newTask)).then(() => { that.initTasks(); }, () => console.log("error"));
-    this.newTask = {
-        name: ko.observable(""),
-        description: ko.observable(""),
-        status: ko.observable(""),
-        user_id: ko.observable(null),
-        parent_id: ko.observable(null),
-        column_id: ko.observable(null),
-        type: ko.observable(null)
-    };
+    taskService.createTask(ko.toJS(this.newTask)).then(() => { that.initTasks(true); }, () => console.log("error"));
+    this.newTask.name("");
+    this.newTask.description("");
+    this.newTask.status("");
+    this.newTask.user_id(null);
+    this.newTask.parent_id(null);
+    this.newTask.column_id(null);
+    this.newTask.type(null);
     $('#myModal').modal('hide');
 };
 
-
-ViewModelMain.prototype.initTasks = function () {
-    let that = this;
-    taskService.getAllTasks().then((response) => {
-        that.availableParents(response);
-        that.showAvailableParents(true);
-    }, (error) => {
-        console.log(error);
-    });
-
-    taskService.getAllTreeTasks().then((response) => {
-        that.data(response);
-    }, (error) => {
-        console.log(error);
-    });
+ViewModelMain.prototype.initTasks = function (forceUpdate) {
+    let allTaskPromise = taskService.getAllTasks(forceUpdate);
+    let allTreeTaskPromise = taskService.getAllTreeTasks(forceUpdate);
+    return Promise.all([allTaskPromise, allTreeTaskPromise]).then(values => {
+        this.availableParents(values[0]);
+        this.showAvailableParents(true);
+        this.data(values[1]);
+        return Promise.resolve();
+    }, (error) => console.log(error));
 };
 
 ViewModelMain.prototype.deleteTask = function() {
     const id = this.selectedNode()._id;
-    taskService.deleteTask(id);
+    taskService.deleteTask(id).then(() => {
+        this.initTasks(true).then(() => {
+            this.showSelectedNode(false);
+        });
+    });
 };
 
 ko.applyBindings(new ViewModelMain(), document.getElementById('main-vm'));
