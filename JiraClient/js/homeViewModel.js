@@ -29,6 +29,8 @@ function ViewModelMain() {
     this.searchTickets = ko.observable("");
     this.showAvailableUser = ko.observable(false);
     this.showAvailableParents = ko.observable(false);
+    this.showFullPathName = ko.observable(false);
+
 
     this.showCreateNewTask = ko.observable(false);
 
@@ -71,11 +73,27 @@ ViewModelMain.prototype.initTasks = function (forceUpdate) {
 
 ViewModelMain.prototype.deleteTask = function() {
     const id = this.selectedNode()._id;
-    taskService.deleteTask(id).then(() => {
+
+    let deleteAll = confirm("Do you want to delete all?");
+    let deletePromise;
+    if (deleteAll) {
+        deletePromise = taskService.deleteTaskWithChield(id);
+    } else {
+        deletePromise = taskService.deleteTask(id);
+    }
+
+    deletePromise.then(() => {
         this.initTasks(true).then(() => {
             this.showSelectedNode(false);
         });
     });
+};
+
+ViewModelMain.prototype.showFullPath = function() {
+    taskService.getTaskById(this.selectedNode()._id).then((result) => {
+        this.selectedNode().fullPath = ko.observable(result.fullPathName);
+        this.showFullPathName(true);
+    })
 };
 
 ko.applyBindings(new ViewModelMain(), document.getElementById('main-vm'));

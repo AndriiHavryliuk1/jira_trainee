@@ -27,6 +27,10 @@ TaskService.prototype.getAllTreeTasks = function(forceUpdate) {
     })
 };
 
+TaskService.prototype.getTaskById = function(id) {
+    return $.get(Constants.SERVER_URL + "tasks/" + id);
+};
+
 TaskService.prototype.updateTask = function(value) {
     return $.put(Constants.SERVER_URL + "tasks", value, function(response) {
         if (this.tasks.length) {
@@ -56,6 +60,16 @@ TaskService.prototype.createTask = function(value) {
 TaskService.prototype.deleteTask = function(id) {
     return $.ajax({
         url: Constants.SERVER_URL + "tasks/" + id,
+        type: 'DELETE',
+        success: function(response) {
+            return response.promise;
+        }.bind(this)
+    });
+};
+
+TaskService.prototype.deleteTaskWithChield = function(id) {
+    return $.ajax({
+        url: Constants.SERVER_URL + "tasks/" + id + "?deleteAllChilds=true",
         type: 'DELETE',
         success: function(response) {
             return response.promise;

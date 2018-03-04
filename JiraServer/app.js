@@ -15,7 +15,7 @@ const boardsRoute = require('./api/routes/boards');
 
 mongoose.connect(`mongodb://admin:admin@jiratrainee-shard-00-00-stvuc.mongodb.net:27017,jiratrainee-shard-00-01-stvuc.mongodb.net:27017,jiratrainee-shard-00-02-stvuc.mongodb.net:27017/test?ssl=true&replicaSet=JiraTrainee-shard-0&authSource=admin`)
 
-mongoose.Promise = require('bluebird');
+mongoose.Promise = bluebird;
 
 app.use(morganLog('dev'));
 app.use(bodyParser.urlencoded({ extended: false }));

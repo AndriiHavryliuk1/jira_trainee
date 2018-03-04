@@ -4,6 +4,7 @@ const Task = require('../../models/task');
 const BoardColumn = require('../../models/boardColumn');
 const TaskStateMachine = require('./taskStateMachine');
 const mongoose = require('mongoose');
+const Promise = require('bluebird');
 
 exports.get_all_tasks = (req, res, next) => {
     Task.find().select('_id task_id name description parent_id user_id column_id status type').exec().then(result => { res.status(200).json(result); }, error => { next(error); });
@@ -151,34 +152,41 @@ exports.update_task = async (req, res, next) => {
     }
 };
 
-exports.delete_task = async (req, res, next) => {
+exports.delete_task = (req, res, next) => {
     const id = req.params.taskId;
 
+    let preDeletePromise = Promise;
+
     if (req.query.deleteAllChilds === "true") {
-        deleteAllChildrens(id, next);
+        preDeletePromise = deleteAllChildrens(id, next);
     } else {
-        let result = await Task.findById(id).exec();
-        await updateAllChildrens(result._id, result.parent_id, next);
+        Task.findById(id).exec().then((result) => {
+            preDeletePromise = updateAllChildrens(result._id, result.parent_id, next);
+        });
     }
 
-    await Task.remove({ _id: id }).exec();
-    res.status(200).json({ id: id, massage: "Deleted success!" });
+    preDeletePromise.then(() => {
+        Task.remove({ _id: id }).exec().then(() => {
+            res.status(200).json({ id: id, massage: "Deleted success!" });
+        });
+    })
 
-    async function updateAllChildrens(currentId, parentId, next) {
-        return await Task.find().where()
+    function updateAllChildrens(currentId, parentId, next) {
+        return Task.find().where()
             .update({ 'parent_id': currentId }, { $set: { parent_id: parentId } }, { multi: true })
             .exec().catch(error => {
                 next(error)
             });
     }
 
-    async function deleteAllChildrens(currentId, next) {
-        let childrens = await Task.find().where({ parent_id: currentId }).exec();
-        if (childrens.lenght) {
-            childrens.forEach(async child => {
-                await deleteAllChildrens(child._id, next);
-            });
-            await Task.remove({ _id: { $in: childrens.map(child => child._id) } }).exec().catch(error => next(error));
-        }
+    function deleteAllChildrens(currentId, next) {
+        return Task.find().where({ parent_id: currentId }).exec().then((childrens) => {
+            if (childrens.length) {
+                childrens.forEach(async child => {
+                    return deleteAllChildrens(child._id, next);
+                });
+                return Task.remove({ _id: { $in: childrens.map(child => child._id) } }).exec().catch(error => next(error));
+            }
+        });
     }
 };
