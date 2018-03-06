@@ -4,8 +4,8 @@
   "description": "Jira_trainee_project ",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon server.js"
+    "test": "set DB=tests&& echo \"Error: no test specified\" && exit 1",
+    "start": "set DB=dev&& nodemon server.js"
   },
   "keywords": [
     "node",

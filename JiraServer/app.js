@@ -12,10 +12,12 @@ const usersRoute = require('./api/routes/users/users');
 const tasksRoute = require('./api/routes/tasks');
 const boardColumnsRoute = require('./api/routes/boardColumns');
 const boardsRoute = require('./api/routes/boards');
+const configuration = require('./config/configuration');
 
-mongoose.connect(`mongodb://admin:admin@jiratrainee-shard-00-00-stvuc.mongodb.net:27017,jiratrainee-shard-00-01-stvuc.mongodb.net:27017,jiratrainee-shard-00-02-stvuc.mongodb.net:27017/test?ssl=true&replicaSet=JiraTrainee-shard-0&authSource=admin`)
+setDBConnection();
 
 mongoose.Promise = bluebird;
+
 
 app.use(morganLog('dev'));
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -48,3 +50,16 @@ app.use((error, req, res, next) => {
 });
 
 module.exports = app;
+
+function setDBConnection() {
+    switch (process.env.DB) {
+        case 'dev':
+            mongoose.connect(configuration.DEV.DB_CONNECTION);
+            break;
+        case 'tests':
+            mongoose.connect(configuration.TESTS.DB_CONNECTION);
+            break;
+        default:
+            mongoose.connect(configuration.DEV.DB_CONNECTION);
+    }
+}
