@@ -1,3 +1,4 @@
+const mongoose = require('mongoose');
 const User = require('../models/user');
 
 exports.get_all_users = (req, res, next) => {
@@ -37,8 +38,10 @@ exports.create_user = (req, res, next) => {
         firstName: req.body.firstName,
         lastName: req.body.lastName,
         email: req.body.email,
-        age: req.body.age
-    })
+        login: req.body.login,
+        password: req.body.password,
+        imageURL: req.body.imageURL
+    });
 
     user.save().then(result => {
         res.status(200).json({
